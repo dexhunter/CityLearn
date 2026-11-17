@@ -1987,6 +1987,7 @@ class Building(Environment):
         except Exception:
             high = 1.0
 
+        infinity = float('inf')
         for appliance in self.deferrable_appliances or []:
             simulation = getattr(appliance, 'deferrable_appliance_simulation', None)
             for cycle in getattr(simulation, 'flexibility_schedule', []) or []:
@@ -1995,8 +1996,8 @@ class Building(Environment):
                         value = float(cycle.get(key, -1.0))
                     except Exception:
                         value = -1.0
-                    if np.isfinite(value) and value >= 0.0:
-                        high = max(high, value)
+                    if high < value < infinity:
+                        high = value
 
         return high
 
